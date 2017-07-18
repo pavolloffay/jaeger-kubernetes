@@ -25,9 +25,15 @@ import com.uber.jaeger.reporters.RemoteReporter;
 import com.uber.jaeger.samplers.ConstSampler;
 import com.uber.jaeger.senders.HttpSender;
 import io.opentracing.Span;
+
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -125,6 +131,14 @@ public class BaseETest {
       String body = response.body().string();
       assertTrue(body.contains("service11"));
       assertTrue(body.contains("service22"));
+    }
+  }
+
+  @Test
+  public void hitDependencyScreen() throws IOException {
+    InputStream response = new URL(queryUrl + "/api/dependencies?endTs=0").openStream();
+    try (BufferedReader buffer = new BufferedReader(new InputStreamReader(response))) {
+      String ignored = buffer.lines().collect(Collectors.joining("\n"));
     }
   }
 

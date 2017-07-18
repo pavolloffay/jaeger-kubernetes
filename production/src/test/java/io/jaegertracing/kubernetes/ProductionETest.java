@@ -14,15 +14,16 @@
 package io.jaegertracing.kubernetes;
 
 import io.jaegertracing.kubernetes.deployment.BaseETest;
-import java.io.IOException;
 import org.junit.Ignore;
+
+import java.io.IOException;
 
 /**
  * @author Pavol Loffay
  */
 public class ProductionETest extends BaseETest {
 
-  @Ignore("dependency links returns 404 because of old Cassandra image")
-  public void testDependencyLinks() throws IOException, InterruptedException {
-  }
+    @Ignore("dependency links returns 404 because of old Cassandra image")
+    public void testDependencyLinks() throws IOException, InterruptedException {
+    }
 }
