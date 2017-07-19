@@ -26,6 +26,7 @@ import com.uber.jaeger.samplers.ConstSampler;
 import com.uber.jaeger.senders.HttpSender;
 import io.opentracing.Span;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
@@ -34,15 +35,14 @@ import okhttp3.Response;
 import org.arquillian.cube.kubernetes.annotations.Named;
 import org.arquillian.cube.kubernetes.annotations.Port;
 import org.arquillian.cube.kubernetes.annotations.PortForward;
-import org.arquillian.cube.requirement.ArquillianConditionalRunner;
 import org.jboss.arquillian.test.api.ArquillianResource;
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 /**
  * @author Pavol Loffay
  */
-@RunWith(ArquillianConditionalRunner.class)
+//@RunWith(ArquillianConditionalRunner.class)
 public class BaseETest {
 
   private static final String QUERY_SERVICE_NAME = "jaeger-query";
@@ -61,6 +61,12 @@ public class BaseETest {
   @PortForward
   @ArquillianResource
   private URL collectorUrl;
+
+  @Before
+  public void after() throws MalformedURLException {
+    queryUrl = new URL("http://localhost:16686/");
+    collectorUrl = new URL("http://localhost:14268/");
+  }
 
   @Test
   public void testUiResponds() throws IOException, InterruptedException {
