@@ -86,6 +86,12 @@ items:
                   fieldPath: status.podIP
             - name: CASSANDRA_CLUSTER_NAME
               value: "jaeger"
+            - name: CASSANDRA_DC
+              value: "dc1"
+            - name: CASSANDRA_RACK
+              value: "rack1"
+            - name: CASSANDRA_ENDPOINT_SNITCH
+              value: "GossipingPropertyFileSnitch"
             - name: CASSANDRA_SEEDS
               value: cassandra-0.cassandra
           volumeMounts:
@@ -114,6 +120,11 @@ items:
         containers:
         - name: jaeger-cassandra-schema
           image: jaegertracing/jaeger-cassandra-schema:0.5
+          env:
+            - name: MODE
+              value: "prod"
+            - name: DATACENTER
+              value: "dc1"
         restartPolicy: Never
 - apiVersion: extensions/v1beta1
   kind: Deployment
