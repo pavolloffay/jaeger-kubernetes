@@ -101,10 +101,29 @@ items:
           - name: cassandra-logs
             mountPath: /var/log/cassandra
         volumes:
-        - name: cassandra-data
-          emptyDir: {}
+#        - name: cassandra-data
+#          mountPath: /cassandra_data
+#          persistentVolumeClaim:
+#            claimName: task-pv-claim
         - name: cassandra-logs
           emptyDir: {}
+    volumeClaimTemplates:
+      - metadata:
+          name: cassandra-data
+          annotations:
+            volume.beta.kubernetes.io/storage-class: fast
+        spec:
+          accessModes: [ "ReadWriteOnce" ]
+          resources:
+            requests:
+              storage: 1Gi
+- apiVersion: storage.k8s.io/v1beta1
+  kind: StorageClass
+  metadata:
+    name: fast
+  provisioner: k8s.io/minikube-hostpath
+  parameters:
+    type: pd-ssd
 - apiVersion: batch/v1
   kind: Job
   metadata:
