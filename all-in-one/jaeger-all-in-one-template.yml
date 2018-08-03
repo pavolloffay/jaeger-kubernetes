@@ -11,7 +11,39 @@
 # or implied. See the License for the specific language governing permissions and limitations under
 # the License.
 #
-
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: istio-tracing
+  labels:
+    jaeger-infra: istio-tracing
+data:
+  config.json: |-
+    {
+      "service_strategies": [
+        {
+          "service": "istio-mixer",
+          "type": "probabilistic",
+          "param": 0
+        },
+        {
+          "service": "istio-policy",
+          "type": "probabilistic",
+          "param": 0
+        },
+        {
+            "service": "istio-telemetry",
+            "type": "probabilistic",
+            "param": 0
+        }
+      ],
+      "default_strategy": {
+        "type": "probabilistic",
+        "param": 1
+      }
+    }
+---
 apiVersion: v1
 kind: List
 items:
@@ -56,6 +88,13 @@ items:
                   path: "/"
                   port: 14269
                 initialDelaySeconds: 5
+              volumeMounts:
+              - mountPath: /etc/conf
+                name: config-volume
+          volumes:
+          - name: config-volume
+            configMap:
+              name: istio-tracing
 - apiVersion: v1
   kind: Service
   metadata:
